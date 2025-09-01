@@ -1,4 +1,4 @@
-export interface Product {
+export interface IProduct {
   id: string;
   title: string;
   price: number;
@@ -6,4 +6,4 @@ export interface Product {
   image: string | null;
 }
 
-export type ProductWithoutId = Omit<Product, 'id'>;
+export type ProductWithoutId = Omit<IProduct, 'id'>;

@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import productsRouter from "./routers/products";
-import mongoDb from "./mongoDb";
+import mongoose from "mongoose";
 
 const app = express();
 const port = 8000;
@@ -13,14 +13,14 @@ app.use(express.static('public'));
 app.use('/products', productsRouter);
 
 const run = async () => {
-  await mongoDb.connect();
+  await mongoose.connect('mongodb://localhost/shop');
 
   app.listen(port, () => {
     console.log(`Listening on port ${port}`);
   });
 
   process.on('exit', () => {
-    mongoDb.disconnect();
+    mongoose.disconnect();
   })
 };
 

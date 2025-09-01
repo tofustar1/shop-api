@@ -1,15 +1,13 @@
 import express from "express";
 import {ProductWithoutId} from "../types";
 import {imagesUpload} from "../multer";
-import mongoDb from "../mongoDb";
-import {ObjectId} from "mongodb";
+import Product from "../models/Product";
 
 const productsRouter = express.Router();
 
 productsRouter.get('/', async (req, res) => {
   try {
-    const db = mongoDb.getDb();
-    const products = await db.collection('products').find().toArray();
+    const products = await Product.find();
     res.send(products);
   } catch {
     res.sendStatus(500);
@@ -18,8 +16,7 @@ productsRouter.get('/', async (req, res) => {
 
 productsRouter.get('/:id', async (req, res) => {
   try {
-    const db = mongoDb.getDb();
-    const product = await db.collection('products').findOne({ _id: new ObjectId(req.params.id) });
+    const product = await Product.findById(req.params.id);
 
     if (!product) {
       return res.status(404).send({error: 'Product not found'});
@@ -44,15 +41,12 @@ productsRouter.post('/', imagesUpload.single('image') ,async (req, res) => {
   };
 
   try {
-    const db = mongoDb.getDb();
-    const product = await db.collection('products').insertOne(productData);
-    console.log(product);
-    res.send({
-      id: product.insertedId,
-      ...productData
-    });
+    const product = new Product(productData);
+    await product.save();
+
+    res.send(product);
   } catch {
-   res.sendStatus(500);
+    res.sendStatus(500);
   }
 });
 
