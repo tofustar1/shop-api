@@ -4,7 +4,6 @@ export interface Product {
   price: number;
   description: string;
   image: string | null;
-  category_id: string;
 }
 
 export type ProductWithoutId = Omit<Product, 'id'>;
