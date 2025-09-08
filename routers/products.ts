@@ -1,13 +1,14 @@
 import express from "express";
-import {ProductWithoutId} from "../types";
+import {ProductMutation} from "../types";
 import {imagesUpload} from "../multer";
 import Product from "../models/Product";
+import mongoose from "mongoose";
 
 const productsRouter = express.Router();
 
 productsRouter.get('/', async (req, res) => {
   try {
-    const products = await Product.find();
+    const products = await Product.find().populate('category', 'title description');
     res.send(products);
   } catch {
     res.sendStatus(500);
@@ -29,11 +30,8 @@ productsRouter.get('/:id', async (req, res) => {
 });
 
 productsRouter.post('/', imagesUpload.single('image') ,async (req, res) => {
-  if (!req.body.title || !req.body.price) {
-    return res.status(400).send({error: "Title and price must be present in the request"});
-  }
-
-  const productData: ProductWithoutId = {
+  const productData: ProductMutation = {
+    category: req.body.category,
     title: req.body.title,
     description: req.body.description,
     price: parseFloat(req.body.price),
@@ -45,7 +43,10 @@ productsRouter.post('/', imagesUpload.single('image') ,async (req, res) => {
     await product.save();
 
     res.send(product);
-  } catch {
+  } catch (error) {
+    if (error instanceof mongoose.Error.ValidationError) {
+      return res.status(400).send({error: error.message});
+    }
     res.sendStatus(500);
   }
 });

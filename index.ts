@@ -1,7 +1,8 @@
 import express from 'express';
 import cors from 'cors';
-import productsRouter from "./routers/products";
 import mongoose from "mongoose";
+import productsRouter from "./routers/products";
+import categoriesRouter from "./routers/categories";
 
 const app = express();
 const port = 8000;
@@ -11,6 +12,7 @@ app.use(cors());
 app.use(express.static('public'));
 
 app.use('/products', productsRouter);
+app.use('/categories', categoriesRouter);
 
 const run = async () => {
   await mongoose.connect('mongodb://localhost/shop');
