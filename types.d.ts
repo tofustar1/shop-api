@@ -11,3 +11,8 @@ export interface CategoryMutation {
   description: string;
 }
 
+export interface UserFields {
+  username: string;
+  password: string;
+  token: string;
+}

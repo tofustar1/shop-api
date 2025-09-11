@@ -29,7 +29,7 @@ productsRouter.get('/:id', async (req, res) => {
   }
 });
 
-productsRouter.post('/', imagesUpload.single('image') ,async (req, res) => {
+productsRouter.post('/', imagesUpload.single('image'), async (req, res) => {
   const productData: ProductMutation = {
     category: req.body.category,
     title: req.body.title,
