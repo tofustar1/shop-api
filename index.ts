@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import productsRouter from "./routers/products";
 import categoriesRouter from "./routers/categories";
 import usersRouter from "./routers/users";
+import config from "./config";
 
 const app = express();
 const port = 8000;
@@ -17,7 +18,7 @@ app.use('/categories', categoriesRouter);
 app.use('/users', usersRouter);
 
 const run = async () => {
-  await mongoose.connect('mongodb://localhost/shop');
+  await mongoose.connect(config.db);
 
   app.listen(port, () => {
     console.log(`Listening on port ${port}`);
