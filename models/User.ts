@@ -18,7 +18,14 @@ const UserSchema = new Schema<UserFields, UserModel, UserMethods>({
   username: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    validate: {
+      validator: async (value: string): Promise<boolean> => {
+        const user = await User.findOne({username: value});
+        return Boolean(!user);
+      },
+      message: 'This user is already registered'
+    }
   },
   password: {
     type: String,
